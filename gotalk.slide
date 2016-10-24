@@ -1,0 +1,160 @@
+Moving from Java to go
+26 Oct 2016
+Tags: foo, bar, baz
+
+Akhilesh Kumar Singh
+Myntra
+akhilesh.singh@myntra.com
+
+* Go differs with Java in several ways:
+
+- Programs compile to machine code. There's no VM.
+- Built-in concurrency
+- Golang has interfaces and structs. But they are not really classes.
+- Golang has functional values and closures(more)
+- No exception
+- No inheritance
+- No class
+- No constructor
+
+* Is Go an object-oriented language?
+- Yes and No
+- Go has types and methods
+- No type hierarchy
+- Interface in Go provides a different approach
+- No class keyword, struct is what you would use for a parallel concept in Go
+- Methods are associated with a struct not within
+
+* Structs
+- Struct name cannot have special characters or start with number
+- Zero-ed initialized
+- No public, private, package, protected keyword
+- If the first letter is capital, it is visible outside the package
+
+* Example: Struct
+    type Rectangle struct {
+        length, width int
+        name string
+    }
+    func main() {
+        r := Rectangle{}
+        fmt.Println("Default rectangle is: ", r) //Default rectangle is: {0 0 }
+
+        r1 := Rectangle{2, 1, "my_r1"} //initialize values in order they are defined in struct
+        fmt.Println("Rectangle r1 is: ", r1) // Rectangle r1 is:  {2 1 my_r1}
+
+        r2 := Rectangle{width:3, name:"my_r2", length:4} //initialize values by variable name in any order
+        fmt.Println("Rectangle r2 is: ", r2) // Rectangle r2 is:  {4 3 my_r2}
+
+        pr := new (Rectangle) //get pointer to an instance with new keyword
+        (*pr).width = 6
+        pr.length = 8
+        pr.name = "ptr"
+        fmt.Println("Rectangle pr is: ", pr) // Rectangle pr is:  &{8 6 ptr_to_rectangle}
+    }
+
+* Example: Struct methods
+Partial code: In Java
+
+    class House {
+        public String getHouseName() {  //method defined within class
+            //implementation
+        }
+    }
+
+
+Partial code: In Go
+
+    func (r Rectangle) GetArea() int {
+    	return r.length*r.width
+    }
+    func main() {
+        fmt.Println("Area is ", r1.GetArea()) // Area r1 is: 2
+    }
+
+* Inheritance: Anonymous fields in structs
+
+    type Kitchen struct {
+        numOfLamps int
+    }
+
+    type House struct {
+        Kitchen
+        numOfLamps int
+    }
+
+    func main() {
+        h := House{Kitchen{2}, 10} //kitchen has 2 lamps, and the House has a total of 10 lamps
+        fmt.Println("House h has this many lamps:", h.numOfLamps) //House h has this many lamps:10
+        fmt.Println("The Kitchen in house h has this many lamps:", h.Kitchen.numOfLamps) //The Kitchen in house h has this many lamps:2
+    }
+
+* Interfaces in Go
+Partial Code: In Java
+
+    public class Rectangle implements Shaper { //implementation here }
+Partial Code: In Go
+
+    type Shaper interface {
+       Area() int
+    }
+
+    type Rectangle struct {
+       length, width int
+    }
+
+    func (r Rectangle) Area() int {
+       return r.length * r.width
+    }
+
+    func main() {
+       r := Rectangle{length:5, width:3}
+       s := Shaper(r)
+       fmt.Printf("Rectangle area: %d, Area of shape: %s", r.Area(), s.Area()) // Rectangle r's area is: 15
+    }
+
+* There Are Errors, No Exceptions. Panic!
+
+    func getSession(id string) (string, error) {
+        // implementation
+    }
+
+    response, err := getSession("SS1234")
+    if err != nil {
+        // handle the error
+        return err
+    }
+
+* Panic Recover
+- Go does not have exceptions but you can create something on the line with panic and recover
+
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println("Recovered in f", r)
+        }
+    }()
+
+    panic(4)
+
+- This is highly not recommended to be used in place of java exception
+- It can be used to catch unexpected panic
+
+* Our Experience
+
+Partial code: In Java
+
+    @Path("/username")
+
+- Java @Path annotation accepts trailing slash
+- Golang it depends on router to router
+
+Partial code: In Java
+
+    @Consumes({ "application/json" })
+
+- Java accepts both "application/json" and "application/json; charset=utf-8"
+
+
+
+
+
