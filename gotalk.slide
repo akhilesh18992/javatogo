@@ -11,7 +11,6 @@ akhilesh.singh@myntra.com
 - Programs compile to machine code. There's no VM.
 - Built-in concurrency
 - Golang has interfaces and structs. But they are not really classes.
-- Golang has functional values and closures(more)
 - No exception
 - No inheritance
 - No class
@@ -27,6 +26,9 @@ akhilesh.singh@myntra.com
 
 * Structs
 - Struct name cannot have special characters or start with number
+- Can contain fields
+- Can not extend other structs
+- Can not contain methods
 - Zero-ed initialized
 - No public, private, package, protected keyword
 - If the first letter is capital, it is visible outside the package
@@ -36,6 +38,12 @@ akhilesh.singh@myntra.com
         length, width int
         name string
     }
+    func (r Rectangle) GetArea() int { // pass by value
+        return r.length*r.width
+    }
+    // func (r *Rectangle) GetArea() int { // pass by reference
+    //     return r.length*r.width
+    // }
     func main() {
         r := Rectangle{}
         fmt.Println("Default rectangle is: ", r) //Default rectangle is: {0 0 }
@@ -45,34 +53,34 @@ akhilesh.singh@myntra.com
 
         r2 := Rectangle{width:3, name:"my_r2", length:4} //initialize values by variable name in any order
         fmt.Println("Rectangle r2 is: ", r2) // Rectangle r2 is:  {4 3 my_r2}
-
-        pr := new (Rectangle) //get pointer to an instance with new keyword
-        (*pr).width = 6
-        pr.length = 8
-        pr.name = "ptr"
-        fmt.Println("Rectangle pr is: ", pr) // Rectangle pr is:  &{8 6 ptr_to_rectangle}
     }
 
 * Example: Struct methods
 Partial code: In Java
 
-    class House {
-        public String getHouseName() {  //method defined within class
-            //implementation
+    class Rectangle {
+        private Integer length;
+        private Integer width;
+        public Rectangle(Integer length, Integer width) {
+            this.length = length;
+            this.width = width;
         }
-    }
+        public Integer getArea() {  //method defined within class
+            return (this.length)*(this.width);
+        }
+    };
 
 
 Partial code: In Go
-
+    type Rectangle struct {
+        Length, Width int
+    }
+    // TODO setter
     func (r Rectangle) GetArea() int {
     	return r.length*r.width
     }
-    func main() {
-        fmt.Println("Area is ", r1.GetArea()) // Area r1 is: 2
-    }
 
-* Inheritance: Anonymous fields in structs
+* Composition Over Inheritance: Anonymous fields in structs
 
     type Kitchen struct {
         numOfLamps int
@@ -154,7 +162,7 @@ Partial code: In Java
 
 - Java accepts both "application/json" and "application/json; charset=utf-8"
 
-
+Logging
 
 
 
