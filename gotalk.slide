@@ -1,6 +1,6 @@
 Moving from Java to go
-26 Oct 2016
-Tags: foo, bar, baz
+19 Jan 2017
+Tags: java, go
 
 Akhilesh Kumar Singh
 Myntra
@@ -33,7 +33,48 @@ akhilesh.singh@myntra.com
 - No public, private, package, protected keyword
 - If the first letter is capital, it is visible outside the package
 
+* Example: Class in Java
+Partial code: In Java
+
+    class Rectangle {
+
+        private Integer length;
+        private Integer width;
+
+        public Rectangle(Integer length, Integer width) {
+            this.length = length;
+            this.width = width;
+        }
+
+        public Integer getArea() {  //method defined within class
+            return (this.length)*(this.width);
+        }
+
+    }
+
+* Example: Struct in Go
+Partial code: In Go
+
+    type Rectangle struct {
+        length, width int
+    }
+    func NewRectangle(l, w int) *Rectangle {
+        r := new(Rectangle)
+        r.length = l
+        r.width = w
+        return r
+    }
+    func (r Rectangle) GetArea() int {
+    	return r.length*r.width
+    }
+    func main() {
+    	r := NewRectangle(3, 4)
+    	fmt.Println(r, r.GetArea()) // &{3 4} 12
+    }
+
 * Example: Struct
+Method are bound to the base type and not T or *T
+
     type Rectangle struct {
         length, width int
         name string
@@ -55,47 +96,42 @@ akhilesh.singh@myntra.com
         fmt.Println("Rectangle r2 is: ", r2) // Rectangle r2 is:  {4 3 my_r2}
     }
 
-* Example: Struct methods
-Partial code: In Java
+* Composition Over Inheritance
 
-    class Rectangle {
-        private Integer length;
-        private Integer width;
-        public Rectangle(Integer length, Integer width) {
-            this.length = length;
-            this.width = width;
-        }
-        public Integer getArea() {  //method defined within class
-            return (this.length)*(this.width);
-        }
-    };
+Object Composition (has-a)
 
-
-Partial code: In Go
-    type Rectangle struct {
-        Length, Width int
+    type Person struct {
+        Name string
+        Address Address
     }
-    // TODO setter
-    func (r Rectangle) GetArea() int {
-    	return r.length*r.width
+
+    type Address struct {
+        Number string
+        Street string
+    }
+
+    func (p *Person) Talk() {
+        fmt.Println("Hi, my name is", p.Name)
     }
 
 * Composition Over Inheritance: Anonymous fields in structs
 
-    type Kitchen struct {
-        numOfLamps int
-    }
+Embedded Types (is-a)
 
-    type House struct {
-        Kitchen
-        numOfLamps int
+    type Citizen struct {
+       Country string
+       Person
     }
 
     func main() {
-        h := House{Kitchen{2}, 10} //kitchen has 2 lamps, and the House has a total of 10 lamps
-        fmt.Println("House h has this many lamps:", h.numOfLamps) //House h has this many lamps:10
-        fmt.Println("The Kitchen in house h has this many lamps:", h.Kitchen.numOfLamps) //The Kitchen in house h has this many lamps:2
+        c := Citizen{}
+        c.Name = "Steve"
+        c.Country = "America"
+        c.Talk()
     }
+
+    c.Person.Name
+    c.Person.Talk()
 
 * Interfaces in Go
 Partial Code: In Java
@@ -123,6 +159,7 @@ Partial Code: In Go
 
 * There Are Errors, No Exceptions. Panic!
 
+* Error
     func getSession(id string) (string, error) {
         // implementation
     }
@@ -132,6 +169,8 @@ Partial Code: In Go
         // handle the error
         return err
     }
+
+* No finally, defer instead
 
 * Panic Recover
 - Go does not have exceptions but you can create something on the line with panic and recover
@@ -162,7 +201,10 @@ Partial code: In Java
 
 - Java accepts both "application/json" and "application/json; charset=utf-8"
 
-Logging
+* Logging
+- log package is slow
+- [[https://github.com/golang/glog][glog]] to rescue
+- [[https://github.com/akhilesh18992/glog][configurable-glog]]
 
 
 
